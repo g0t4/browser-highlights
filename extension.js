@@ -1,3 +1,8 @@
+// todo try using window.HighlightRegistry? 
+// CSS Custom Hihglight API
+// https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API
+// is this a good use case?
+
 const COLORS = {
     'p': '#ffb6c1',
     'g': '#98fb98',
@@ -58,6 +63,17 @@ function getXPath(element) {
             ix++;
         }
     }
+}
+
+function saveHighlight(highlight) {
+  chrome.storage.local.get(['highlights'], (result) => {
+    const highlights = result.highlights || {};
+    if (!highlights[window.location.href]) {
+      highlights[window.location.href] = [];
+    }
+    highlights[window.location.href].push(highlight);
+    chrome.storage.local.set({ highlights });
+  });
 }
 
 function loadHighlights() {
