@@ -8,14 +8,13 @@ const COLORS = {
 console.log('loaded simple highlighter');
 
 document.addEventListener('keydown', (e) => {
-
-    if (e.altKey && Object.keys(COLORS).includes(e.key.toLowerCase())) {
+    if (Object.keys(COLORS).includes(e.key.toLowerCase())) {
+        console.log('highlighting', e.key.toLowerCase());
         const color = COLORS[e.key.toLowerCase()];
         highlightSelection(color);
     }
 });
 
-// Function to highlight selected text
 function highlightSelection(color) {
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
@@ -25,12 +24,10 @@ function highlightSelection(color) {
     span.style.backgroundColor = color;
     span.className = 'highlighter-span';
 
-    // Create a unique ID for this highlight
     span.dataset.highlightId = Date.now().toString();
 
     range.surroundContents(span);
 
-    // Save the highlight
     saveHighlight({
         id: span.dataset.highlightId,
         color: color,
@@ -40,7 +37,6 @@ function highlightSelection(color) {
     });
 }
 
-// Function to get XPath of an element
 function getXPath(element) {
     if (element.id !== '') {
         return `//*[@id="${element.id}"]`;
@@ -64,21 +60,10 @@ function getXPath(element) {
     }
 }
 
-// Save highlight to storage
-function saveHighlight(highlight) {
-    chrome.storage.local.get(['highlights'], (result) => {
-        const highlights = result.highlights || {};
-        if (!highlights[window.location.href]) {
-            highlights[window.location.href] = [];
-        }
-        highlights[window.location.href].push(highlight);
-        chrome.storage.local.set({highlights});
-    });
-}
-
-// Load and apply highlights when page loads
 function loadHighlights() {
+    console.log('loading highlights');
     chrome.storage.local.get(['highlights'], (result) => {
+        console.log('loaded highlights:', result.highlights);
         const urlHighlights = result.highlights?.[window.location.href] || [];
 
         urlHighlights.forEach(highlight => {
@@ -107,5 +92,10 @@ function loadHighlights() {
     });
 }
 
-// Load highlights when page is ready
+window.highs = {
+  loadHighlights,
+  highlightSelection,
+  COLORS
+};
+
 document.addEventListener('DOMContentLoaded', loadHighlights);
