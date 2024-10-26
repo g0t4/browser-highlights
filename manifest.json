@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "Simple Text Highlighter",
+    "version": "1.0",
+    "description": "Highlight text in different colors using keyboard shortcuts",
+    "permissions": [ "storage", "activeTab" ],
+    "content_scripts": [ {
+            "matches": [ "<all_urls>" ],
+            "js": [ "extension.js" ]
+        } ],
+    "commands": {
+        "highlight-pink": {
+            "suggested_key": {
+                "default": "Alt+P"
+            },
+            "description": "Highlight in pink"
+        },
+        "highlight-green": {
+            "suggested_key": {
+                "default": "Alt+G"
+            },
+            "description": "Highlight in green"
+        },
+        "highlight-blue": {
+            "suggested_key": {
+                "default": "Alt+B"
+            },
+            "description": "Highlight in blue"
+        },
+        "highlight-yellow": {
+            "suggested_key": {
+                "default": "Alt+Y"
+            },
+            "description": "Highlight in yellow"
+        }
+    }
+}
